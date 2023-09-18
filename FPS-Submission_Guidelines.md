@@ -138,8 +138,8 @@ Upon submission of a PR, a series of technical checks will run on GitHub to veri
 		<li>Each domain must satisfy the /.well-known/ metadata requirement:</li>
 		<ul>
 <li>The /.well-known/ metadata requirement demonstrates that the submitter has administrative access to the domains present in the set, since administrative access is required to modify the /.well-known/ file. This will help prevent unauthorized actors from adding domains to a set. </li>
-<li>The primary domain must serve a JSON file at /.well-known/first-party-set.json. The contents of the file must be identical to the submission. Each member domain must serve a JSON file at /.well-known/first-party-set.json. The contents of the file must name the primary domain. These files must be maintained for the duration of the domain’s inclusion in the set.</li>
-			<li>Example for  primary.com/.well-known/first-party-set.json:</li>
+<li>The primary domain must serve a JSON file at /.well-known/related-website-set.json (Note: list entries merged before September 15th 2023 may serve their well-known file at /.well-known/first-party-set.json instead; however, any changes to those entries will require that the primary and all members of the set must be served at /.well-known/related-website-set.json like any other entry). The contents of the file must be identical to the submission. Each member domain must serve a JSON file at /.well-known/related-website-set.json. The contents of the file must name the primary domain. These files must be maintained for the duration of the domain’s inclusion in the set.</li>
+			<li>Example for  primary.com/.well-known/related-website-set.json:</li>
 		</ul></ul>
 	
 ```json
@@ -161,7 +161,7 @@ Upon submission of a PR, a series of technical checks will run on GitHub to veri
   }
 }
 ```
-The `/.well-known/first-party-set.json` file for the set primary must follow the schema specified below:
+The `/.well-known/related-website-set.json` file for the set primary must follow the schema specified below:
 ```json
 {
   "type": "object",
@@ -202,13 +202,13 @@ The `/.well-known/first-party-set.json` file for the set primary must follow the
   }
 }
 ```
-Example for associate1.com/.well-known/first-party-set.json:
+Example for associate1.com/.well-known/related-website-set.json:
 ```json
 {
   "primary":"https://primary.com"
 }
 ```
-The /.well-known/first-party-set.json file for set members must follow the schema specified below:
+The /.well-known/related-website-set.json file for set members must follow the schema specified below:
 ```json
 {
   "type": "object",
@@ -259,7 +259,7 @@ In addition to the formation requirements and validation requirements above, set
 | Subset Type | Browser Behavior |
 | ----------- | ----------------- |
 |   Service   | <ul><li>No limit on number of domains.</li><li>Only other domains in the same set may call requestStorageAccessFor on behalf of a service domain. </li><ul><li>This access will be auto-granted. </li><li>A service domain calling requestStorageAccess for itself, or calling requestStorageAccessFor for any other domain, will be auto-rejected.</li>|
-|   Associated   | <ul><li>requestStorageAccess and requestStorageAccessFor will be auto-granted for up to three domains in the order listed within the associated subset category.</li><li>requestStorageAccess and requestStorageAccessFor will be auto-rejected for any domain beyond the third listed. </li>|
+|   Associated   | <ul><li>requestStorageAccess and requestStorageAccessFor will be auto-granted for up to five domains in the order listed within the associated subset category.</li><li>requestStorageAccess and requestStorageAccessFor will be auto-rejected for any domain beyond the third listed. </li>|
 
 While there is no limit on the number of ccTLDs that may be associated with a single associated or service domain in the same set, a ccTLD variant inherits the restrictions imposed on its equivalent domain. For example, [requestStorageAccess](https://privacycg.github.io/storage-access/) calls will be auto-rejected when called by a ccTLD variant which is an alias of a service domain.
 To test this behavior in Chrome, please consult the [First-Party Sets integration guide](https://developer.chrome.com/en/docs/privacy-sandbox/first-party-sets-integration/).
